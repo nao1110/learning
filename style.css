@@ -1,0 +1,215 @@
+/* 基本スタイル */
+:root {
+    --primary-color: #34495e; /* ネイビー */
+    --secondary-color: #f1f8f5; /* 薄いミントグリーン */
+    --accent-color: #1abc9c; /* ミントグリーン */
+    --text-color: #2c3e50;
+    --background-color: #f8f9fa;
+    --card-bg-color: #ffffff;
+    --border-color: #e0e0e0;
+    --font-family-japanese: 'Noto Sans JP', sans-serif;
+    --font-family-english: 'Poppins', sans-serif;
+}
+
+body {
+    font-family: var(--font-family-japanese);
+    background-color: var(--background-color);
+    color: var(--text-color);
+    margin: 0;
+    line-height: 1.6;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* ヘッダー */
+header {
+    background-color: var(--card-bg-color);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    padding: 1rem 5%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header h1 {
+    margin: 0;
+    font-family: var(--font-family-english);
+    font-weight: 600;
+    font-size: 1.5rem;
+}
+header h1 a {
+    text-decoration: none;
+    color: var(--primary-color);
+}
+
+#user-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+#user-name {
+    margin: 0;
+    font-weight: 500;
+}
+
+/* メインコンテンツ */
+main {
+    padding: 2rem 5%;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+/* ログイン画面 */
+.login-container {
+    text-align: center;
+    background: var(--card-bg-color);
+    padding: 3rem 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    max-width: 450px;
+    margin: 4rem auto;
+}
+.login-container h2 {
+    font-family: var(--font-family-english);
+    font-size: 2.5rem;
+    color: var(--primary-color);
+    margin: 0 0 0.5rem 0;
+}
+
+/* カードスタイル */
+.card {
+    background-color: var(--card-bg-color);
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+/* フォーム */
+.form-card h3 {
+    margin-top: 0;
+    font-size: 1.2rem;
+    border-bottom: 2px solid var(--accent-color);
+    padding-bottom: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.form-group {
+    margin-bottom: 1.2rem;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+input[type="text"],
+input[type="number"] {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+
+/* ボタン */
+button {
+    background-color: var(--accent-color);
+    color: white;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #16a085;
+}
+
+#logout-button {
+    background-color: transparent;
+    color: var(--primary-color);
+    border: 1px solid var(--primary-color);
+}
+#logout-button:hover {
+    background-color: var(--primary-color);
+    color: white;
+}
+#login-button {
+    margin-top: 1rem;
+    width: 100%;
+    padding: 1rem;
+    font-size: 1.1rem;
+}
+
+/* 学習テーマ一覧 */
+.theme-card {
+    position: relative;
+    border-left: 5px solid var(--accent-color);
+}
+
+.theme-card h4 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.3rem;
+    color: var(--primary-color);
+}
+
+.theme-card .goal {
+    margin: 0 0 1rem 0;
+    color: #7f8c8d;
+    font-size: 0.9rem;
+}
+
+.progress-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 10px;
+    background-color: var(--secondary-color);
+    border-radius: 5px;
+    overflow: hidden;
+    margin-bottom: 1rem;
+}
+
+.progress-bar-inner {
+    height: 100%;
+    background-color: var(--accent-color);
+    width: 0%; /* JavaScriptで変更 */
+    transition: width 0.5s ease;
+}
+
+.time-form {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+.time-form input {
+    width: 80px;
+}
+
+.delete-button {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: #bdc3c7;
+    cursor: pointer;
+}
+.delete-button:hover {
+    color: #e74c3c;
+}

@@ -1,0 +1,71 @@
+
+
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Career Study Tracker</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header>
+        <h1><a href="/">Career Study Tracker</a></h1>
+        <nav id="user-info" class="hidden">
+            <p id="user-name"></p>
+            <button id="logout-button">ログアウト</button>
+        </nav>
+    </header>
+
+    <main>
+        <section id="login-section">
+            <div class="login-container">
+                <h2>Welcome</h2>
+                <p>学習を記録して、キャリアを加速させましょう。</p>
+                <button id="login-button">Googleでログイン</button>
+            </div>
+        </section>
+
+        <section id="app-section" class="hidden">
+
+            <div class="card form-card">
+                <h3>新しい学習テーマを追加</h3>
+                <form id="add-theme-form">
+                    <div class="form-group">
+                        <label for="theme-title">学習テーマ</label>
+                        <input type="text" id="theme-title" placeholder="例：Webデザイン" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="theme-goal">ゴール</label>
+                        <input type="text" id="theme-goal" placeholder="例：ポートフォリオサイトを制作する" required>
+                    </div>
+                     <div class="form-group">
+                        <label for="target-hours">目標学習時間（時間）</label>
+                        <input type="number" id="target-hours" placeholder="例: 50" min="1" required>
+                    </div>
+                    <button type="submit">追加する</button>
+                </form>
+            </div>
+
+            <div id="themes-list">
+                </div>
+
+        </section>
+    </main>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <!-- ↑ jQueryのscriptタグはtype="module"は不要です (jQueryは従来の形式のため) -->
+
+    <!-- ★★★ ここから下のFirebaseとscript.jsのscriptタグ全てに type="module" を追加してください ★★★ -->
+    <script type="module" src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+    <script type="module" src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
+    <script type="module" src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
+
+    <script type="module" src="script.js"></script>
+</body>
+</html>
