@@ -61,7 +61,8 @@ main {
     margin: 0 auto;
 }
 
-/* ログイン画面 */
+/* ログイン画面に関連するスタイルは削除 */
+/*
 .login-container {
     text-align: center;
     background: var(--card-bg-color);
@@ -77,6 +78,7 @@ main {
     color: var(--primary-color);
     margin: 0 0 0.5rem 0;
 }
+*/
 
 /* カードスタイル */
 .card {
@@ -133,6 +135,8 @@ button:hover {
     background-color: #16a085;
 }
 
+/* ログアウトボタンとログインボタンのスタイルを削除 */
+/*
 #logout-button {
     background-color: transparent;
     color: var(--primary-color);
@@ -148,6 +152,7 @@ button:hover {
     padding: 1rem;
     font-size: 1.1rem;
 }
+*/
 
 /* 学習テーマ一覧 */
 .theme-card {

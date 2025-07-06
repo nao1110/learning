@@ -1,6 +1,5 @@
 
 
-
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -16,24 +15,11 @@
 
     <header>
         <h1><a href="/">Career Study Tracker</a></h1>
-        <nav id="user-info" class="hidden">
-            <p id="user-name"></p>
-            <button id="logout-button">ログアウト</button>
-        </nav>
+        <nav id="user-info"> <p id="user-name">ようこそ、ゲストさん！</p> </nav>
     </header>
 
     <main>
-        <section id="login-section">
-            <div class="login-container">
-                <h2>Welcome</h2>
-                <p>学習を記録して、キャリアを加速させましょう。</p>
-                <button id="login-button">Googleでログイン</button>
-            </div>
-        </section>
-
-        <section id="app-section" class="hidden">
-
-            <div class="card form-card">
+        <section id="app-section"> <div class="card form-card">
                 <h3>新しい学習テーマを追加</h3>
                 <form id="add-theme-form">
                     <div class="form-group">
@@ -59,11 +45,7 @@
     </main>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <!-- ↑ jQueryのscriptタグはtype="module"は不要です (jQueryは従来の形式のため) -->
-
-    <!-- ★★★ ここから下のFirebaseとscript.jsのscriptタグ全てに type="module" を追加してください ★★★ -->
     <script type="module" src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-    <script type="module" src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
     <script type="module" src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
 
     <script type="module" src="script.js"></script>
