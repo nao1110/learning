@@ -1,14 +1,12 @@
 // Firebase SDKから必要な関数をインポート
-// firebase/app はFirebaseアプリのコア機能を初期化するために必要です。
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-// Firebase Authentication の機能は使用しないため、関連インポートは削除またはコメントアウト
-// import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+import { initializeApp } from "firebase/app";
 // Cloud Firestore の機能を使うためにインポートします。
-// FieldValue.increment は数値フィールドを安全に増減させるために使用します。
-import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp, doc, updateDoc, deleteDoc, increment } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp, doc, updateDoc, deleteDoc, increment } from "firebase/firestore";
 
-// WebアプリのFirebase設定
-// ここにFirebaseプロジェクトで取得した設定情報を貼り付けます。
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: "XXX",
   authDomain: "XXX",
@@ -18,9 +16,8 @@ const firebaseConfig = {
   appId: "XXX"
 };
 
-// Firebaseアプリを初期化
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
-
 // Firebase Authenticationのインスタンスは不要なため、関連コードを削除またはコメントアウト
 // const auth = getAuth(app);
 // Cloud Firestoreのインスタンスを取得
@@ -115,18 +112,23 @@ logoutButton.addEventListener('click', async () => {
 addThemeForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    // ログインチェックは不要（currentUserは常に存在する）
-    // if (!currentUser) {
-    //     alert("ログインしていません。");
-    //     return;
-    // }
+    // 以下のconsole.logを追加します
+    console.log("「追加する」ボタンがクリックされました。");
 
     const themeTitle = themeTitleInput.value.trim();
     const themeGoal = themeGoalInput.value.trim();
     const targetHours = parseInt(targetHoursInput.value, 10);
 
+    // 以下のconsole.logを追加します
+    console.log("取得した入力値:");
+    console.log("学習テーマ:", themeTitle);
+    console.log("ゴール:", themeGoal);
+    console.log("目標学習時間:", targetHours);
+
     if (themeTitle === "" || themeGoal === "" || isNaN(targetHours) || targetHours <= 0) {
         alert("全ての項目を正しく入力してください。目標学習時間は1以上の数値を入力してください。");
+        // ここでログを追加することもできます
+        console.log("入力値が不正です。");
         return;
     }
 
@@ -141,12 +143,17 @@ addThemeForm.addEventListener('submit', async (e) => {
             createdAt: serverTimestamp()
         });
 
+        // 以下のconsole.logを追加します
+        console.log("Firestoreへのデータ追加が成功しました！");
+
         themeTitleInput.value = '';
         themeGoalInput.value = '';
         targetHoursInput.value = '';
 
     } catch (error) {
         console.error("学習テーマの追加エラー:", error);
+        // エラー発生時にもログを出力
+        console.log("Firestoreへのデータ追加に失敗しました。");
         alert("学習テーマの追加に失敗しました。");
     }
 });
