@@ -1,40 +1,21 @@
-// Firebase SDKから必要な関数をインポート
-import { initializeApp } from "firebase/app";
-// Cloud Firestore の機能を使うためにインポートします。
-import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp, doc, updateDoc, deleteDoc, increment } from "firebase/firestore";
-
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
+// Firebase v9 compat版を使用
 // Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: "XXX",
   authDomain: "XXX",
   projectId: "XXX",
-  storageBucket: "XXX",
+  storageBucket:"XXX",
   messagingSenderId: "XXX",
   appId: "XXX"
 };
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
-// Firebase Authenticationのインスタンスは不要なため、関連コードを削除またはコメントアウト
-// const auth = getAuth(app);
+const app = firebase.initializeApp(firebaseConfig);
 // Cloud Firestoreのインスタンスを取得
-const db = getFirestore(app);
+const db = firebase.firestore();
 
-// HTML要素への参照を取得
-// ログイン関連の要素は削除
-// const loginSection = document.getElementById('login-section');
-// const appSection = document.getElementById('app-section'); // hiddenクラスを削除したため、参照は不要に
-// const loginButton = document.getElementById('login-button'); // ボタンを削除したため
-// const logoutButton = document.getElementById('logout-button'); // ボタンを削除したため
-const userNameDisplay = document.getElementById('user-name');
-const addThemeForm = document.getElementById('add-theme-form');
-const themeTitleInput = document.getElementById('theme-title');
-const themeGoalInput = document.getElementById('theme-goal');
-const targetHoursInput = document.getElementById('target-hours');
-const themesList = document.getElementById('themes-list');
+// HTML要素への参照を取得（DOMContentLoaded後に初期化）
+let userNameDisplay, addThemeForm, themeTitleInput, themeGoalInput, targetHoursInput, themesList;
 
 // 現在のユーザー情報を保持する変数
 // ログインを削除したため、ダミーのユーザー情報を設定
@@ -68,14 +49,64 @@ onAuthStateChanged(auth, (user) => {
 */
 
 // 初期表示時にユーザー名をセット（ダミーユーザー）
-if (currentUser) {
-    userNameDisplay.textContent = `ようこそ、${currentUser.displayName}さん！`;
+// DOMが読み込まれた後に初期化処理を実行
+document.addEventListener('DOMContentLoaded', () => {
+    // HTML要素への参照を取得
+    userNameDisplay = document.getElementById('user-name');
+    addThemeForm = document.getElementById('add-theme-form');
+    themeTitleInput = document.getElementById('theme-title');
+    themeGoalInput = document.getElementById('theme-goal');
+    targetHoursInput = document.getElementById('target-hours');
+    themesList = document.getElementById('themes-list');
+    
+    // DOM要素が正しく取得できているか確認
+    console.log("DOM要素チェック:");
+    console.log("userNameDisplay:", userNameDisplay);
+    console.log("addThemeForm:", addThemeForm);
+    console.log("themeTitleInput:", themeTitleInput);
+    console.log("themeGoalInput:", themeGoalInput);
+    console.log("targetHoursInput:", targetHoursInput);
+    console.log("themesList:", themesList);
+    
+    // Firebase接続テスト
+    console.log("Firebase設定確認:");
+    console.log("app:", app);
+    console.log("db:", db);
+    console.log("currentUser:", currentUser);
+    
+    if (currentUser && userNameDisplay) {
+        userNameDisplay.textContent = `ようこそ、${currentUser.displayName}さん！`;
+    }
+    
+    // フォームのイベントリスナーを設定
+    if (addThemeForm) {
+        setupFormEventListener();
+    } else {
+        console.error("addThemeFormが見つかりません！");
+    }
+    
+    // 簡単なFirebase接続テスト
+    testFirebaseConnection();
+    
+    // ページロード時に学習テーマを読み込む関数を呼び出す
+    loadThemes();
+});
+
+// ===========================================
+// Firebase接続テスト関数
+// ===========================================
+async function testFirebaseConnection() {
+    console.log("=== Firebase接続テスト開始 ===");
+    try {
+        // テスト用のコレクション参照を作成
+        const testCollectionRef = db.collection(`users/${currentUser.uid}/themes`);
+        console.log("コレクション参照作成成功:", testCollectionRef);
+        
+        console.log("Firebase接続テスト完了：正常");
+    } catch (error) {
+        console.error("Firebase接続テストエラー:", error);
+    }
 }
-
-// ページロード時に学習テーマを読み込む関数を呼び出す
-// onAuthStateChanged が無くなったため、直接呼び出す
-loadThemes();
-
 
 // ===========================================
 // Googleログイン処理 (削除)
@@ -109,13 +140,32 @@ logoutButton.addEventListener('click', async () => {
 // ===========================================
 // 新しい学習テーマの追加処理
 // ===========================================
-addThemeForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
+function setupFormEventListener() {
+    console.log("setupFormEventListener関数が呼ばれました");
+    
+    if (!addThemeForm) {
+        console.error("addThemeFormが存在しません");
+        return;
+    }
+    
+    addThemeForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        console.log("=== フォーム送信処理開始 ===");
 
-    // 以下のconsole.logを追加します
-    console.log("「追加する」ボタンがクリックされました。");
+        // 以下のconsole.logを追加します
+        console.log("「追加する」ボタンがクリックされました。");
+        
+        // DOM要素の存在確認
+        if (!themeTitleInput || !themeGoalInput || !targetHoursInput) {
+            console.error("入力要素が見つかりません:", {
+                themeTitleInput,
+                themeGoalInput, 
+                targetHoursInput
+            });
+            return;
+        }
 
-    const themeTitle = themeTitleInput.value.trim();
+        const themeTitle = themeTitleInput.value.trim();
     const themeGoal = themeGoalInput.value.trim();
     const targetHours = parseInt(targetHoursInput.value, 10);
 
@@ -135,50 +185,74 @@ addThemeForm.addEventListener('submit', async (e) => {
     try {
         // Firestoreの'users/{uid}/themes'コレクションに新しいドキュメントを追加
         // currentUser.uid はダミーの 'guest_user' になる
-        await addDoc(collection(db, `users/${currentUser.uid}/themes`), {
+        console.log("Firestoreに保存するデータ:", {
             title: themeTitle,
             goal: themeGoal,
             targetHours: targetHours,
             currentHours: 0,
-            createdAt: serverTimestamp()
+            createdAt: "serverTimestamp()"
+        });
+        console.log("保存先パス:", `users/${currentUser.uid}/themes`);
+        
+        const docRef = await db.collection(`users/${currentUser.uid}/themes`).add({
+            title: themeTitle,
+            goal: themeGoal,
+            targetHours: targetHours,
+            currentHours: 0,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
         });
 
         // 以下のconsole.logを追加します
-        console.log("Firestoreへのデータ追加が成功しました！");
+        console.log("Firestoreへのデータ追加が成功しました！ドキュメントID:", docRef.id);
 
         themeTitleInput.value = '';
         themeGoalInput.value = '';
         targetHoursInput.value = '';
 
     } catch (error) {
-        console.error("学習テーマの追加エラー:", error);
+        console.error("=== 学習テーマの追加エラー ===");
+        console.error("エラーオブジェクト:", error);
+        console.error("エラーメッセージ:", error.message);
+        console.error("エラーコード:", error.code);
+        console.error("エラースタック:", error.stack);
+        
         // エラー発生時にもログを出力
         console.log("Firestoreへのデータ追加に失敗しました。");
-        alert("学習テーマの追加に失敗しました。");
+        alert(`学習テーマの追加に失敗しました。エラー: ${error.message}`);
     }
-});
+        console.log("=== フォーム送信処理終了 ===");
+    });
+}
 
 // ===========================================
 // 学習テーマの読み込みとリアルタイム更新
 // ===========================================
 function loadThemes() {
-    // ログインチェックは不要（currentUserは常に存在する）
-    // if (!currentUser) {
-    //     return;
-    // }
+    console.log("loadThemes関数が呼ばれました");
+    
+    // DOM要素の存在確認
+    if (!themesList) {
+        console.error("themes-list要素が見つかりません");
+        return;
+    }
 
-    // ユーザーのテーマコレクションへの参照を作成 (ダミーUIDを使用)
-    const userThemesCollectionRef = collection(db, `users/${currentUser.uid}/themes`);
-    const q = query(userThemesCollectionRef, orderBy("createdAt", "desc"));
+    try {
+        // ユーザーのテーマコレクションへの参照を作成 (ダミーUIDを使用)
+        const userThemesCollectionRef = db.collection(`users/${currentUser.uid}/themes`);
+        
+        console.log("Firestoreからデータを取得中...");
 
-    onSnapshot(q, (snapshot) => {
-        themesList.innerHTML = '';
+        userThemesCollectionRef.orderBy("createdAt", "desc").onSnapshot((snapshot) => {
+            console.log("Firestoreからデータを受信:", snapshot.size, "件");
+            themesList.innerHTML = '';
 
-        snapshot.forEach((doc) => {
-            const theme = doc.data();
-            const themeId = doc.id;
+            snapshot.forEach((doc) => {
+                const theme = doc.data();
+                const themeId = doc.id;
+                
+                console.log("テーマデータ:", theme);
 
-            const progressPercentage = theme.targetHours > 0
+                const progressPercentage = theme.targetHours > 0
                 ? Math.min(100, (theme.currentHours / theme.targetHours) * 100)
                 : 0;
 
@@ -204,10 +278,13 @@ function loadThemes() {
         });
 
         addEventListenersToThemeCards();
-    }, (error) => {
-        console.error("学習テーマの読み込みエラー:", error);
-        alert("学習テーマの読み込み中に問題が発生しました。");
-    });
+        }, (error) => {
+            console.error("学習テーマの読み込みエラー:", error);
+            alert("学習テーマの読み込み中に問題が発生しました。");
+        });
+    } catch (error) {
+        console.error("loadThemes関数でエラーが発生:", error);
+    }
 }
 
 // ===========================================
@@ -232,9 +309,9 @@ function addEventListenersToThemeCards() {
             // }
 
             try {
-                const themeDocRef = doc(db, `users/${currentUser.uid}/themes`, themeId); // ダミーUIDを使用
-                await updateDoc(themeDocRef, {
-                    currentHours: increment(hoursToAdd)
+                const themeDocRef = db.collection(`users/${currentUser.uid}/themes`).doc(themeId);
+                await themeDocRef.update({
+                    currentHours: firebase.firestore.FieldValue.increment(hoursToAdd)
                 });
                 inputElement.value = '';
             } catch (error) {
@@ -258,8 +335,8 @@ function addEventListenersToThemeCards() {
             // }
 
             try {
-                const themeDocRef = doc(db, `users/${currentUser.uid}/themes`, themeId); // ダミーUIDを使用
-                await deleteDoc(themeDocRef);
+                const themeDocRef = db.collection(`users/${currentUser.uid}/themes`).doc(themeId);
+                await themeDocRef.delete();
             } catch (error) {
                 console.error("テーマの削除エラー:", error);
                 alert("テーマの削除に失敗しました。");
